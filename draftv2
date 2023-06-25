@@ -1,0 +1,70 @@
+from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+import time
+import random
+import threading
+
+# List of device ids
+device_ids = ['device1', 'device2', 'device3', 'device4', 'device5', 'device6', 'device7', 'device8', 'device9', 'device10'] # replace with your actual device ids
+
+def launch_spotify(driver):
+    # Open Spotify app
+    driver.start_activity('com.spotify.music', '.MainActivity')
+    time.sleep(random.randint(2, 4))
+
+def select_playlist(driver):
+    # Code to navigate to and select a specific playlist in Spotify
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+def play_shuffle(driver):
+    # Code to start playing the selected playlist on shuffle
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+def skip_track(driver):
+    # Code to skip the current track
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+def close_app(driver):
+    # Code to close the Spotify app
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+def control_device(device_id):
+    desired_caps = {
+        'platformName': 'Android',
+        'deviceName': device_id,
+        'appPackage': 'com.spotify.music',
+        'appActivity': '.MainActivity',
+    }
+    driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+    time.sleep(1)
+
+    while True:  # loop indefinitely
+        launch_spotify(driver)
+        time.sleep(random.randint(2, 4))  # delay after launching Spotify
+        select_playlist(driver)
+        time.sleep(random.randint(2, 4))  # delay after selecting playlist
+        play_shuffle(driver)
+        time.sleep(random.randint(10*60, 75*60))  # delay before skipping track
+        skip_track(driver)
+        time.sleep(random.randint(30*60, 120*60))  # delay before changing playlist
+        select_playlist(driver)
+        time.sleep(random.randint(45*60, 720*60))  # delay before closing app
+        close_app(driver)
+        time.sleep(random.randint(60*60, 240*60))  # delay before relaunching app
+
+    driver.quit() # end the session
+
+# Create and start a thread for each device
+threads = []
+for device_id in device_ids:
+    thread = threading.Thread(target=control_device, args=(device_id,))
+    thread.start()
+    threads.append(thread)
+
+# Wait for all threads to finish
+for thread in threads:
+    thread.join()
