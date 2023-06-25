@@ -1,0 +1,36 @@
+from appium import webdriver
+from appium.webdriver.common.touch_action import TouchAction
+import time
+import random
+
+# List of device ids
+device_ids = ['device1', 'device2', 'device3'] # replace with your actual device ids
+
+def launch_spotify(driver):
+    # Open Spotify app
+    driver.start_activity('com.spotify.music', '.MainActivity')
+    time.sleep(random.randint(2, 4))
+
+def select_playlist(driver):
+    # Code to navigate to and select a specific playlist in Spotify
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+def play_shuffle(driver):
+    # Code to start playing the selected playlist on shuffle
+    # The actual code will depend on the structure of the Spotify app
+    pass
+
+for device_id in device_ids:
+    desired_caps = {
+        'platformName': 'Android',
+        'deviceName': device_id,
+        'appPackage': 'com.spotify.music',
+        'appActivity': '.MainActivity',
+    }
+    driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+    time.sleep(1)
+    launch_spotify(driver)
+    select_playlist(driver)
+    play_shuffle(driver)
+    driver.quit() # end the session
